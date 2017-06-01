@@ -167,3 +167,115 @@ function chengeInputFocus(obj, evt) {
         }
     }
 }
+
+///光标向左向右滑到末尾才改变检点
+function chengeInputFocusEnd(obj, evt) {
+    var evt = (evt) ? evt : window.event
+    var cell = $(obj).parents("td");
+    var row = $(obj).parents("tr");
+    var cellindex = cell[0].cellIndex;
+    var rowindex = row[0].rowIndex;
+    var tb = $(obj).parents("table");
+    //left
+    if (evt.keyCode == 37) {
+        var porint =0;
+		if($(obj).attr("type")=="text"){
+			porint = getTxtCursorPosition(obj);
+		}
+        if (porint == 0) {
+            var result = true;
+            while (result) {
+                if (cell.prev("td").length == 0) {
+                    result = false;
+                } else if (cell.prev("td").find("input").length > 0) {
+                    if (cell.prev("td").find("input").attr("disabled") == "disabled" || cell.prev("td").find("input").attr("readonly") == "readonly") {
+                        cell = cell.prev("td");
+                    } else {
+                        cell.prev("td").find("input").focus()
+                        result = false;
+                    }
+                } else {
+                    cell = cell.prev("td");
+                }
+            }
+        }
+        //up
+    } else if (evt.keyCode == 38) {
+        var result = true;
+        while (result) {
+            if (row.prev("tr").length == 0) {
+                result = false;
+            } else if ($(row.prev("tr").find("td")[cellindex]).find("input").length > 0) {
+                if ($(row.prev("tr").find("td")[cellindex]).find("input").attr("disabled") == "disabled" || $(row.prev("tr").find("td")[cellindex]).find("input").attr("readonly") == "readonly") {
+                    row = row.prev("tr");
+                } else {
+                    $(row.prev("tr").find("td")[cellindex]).find("input").focus()
+                    result = false;
+                }
+            } else {
+                row = row.prev("tr");
+            }
+        }
+        //right
+    } else if (evt.keyCode == 39) {
+         var porint =obj.value.length;
+		if($(obj).attr("type")=="text"){
+			porint = getTxtCursorPosition(obj);
+		}
+        if (porint == obj.value.length) {
+            var result = true;
+            while (result) {
+                if (cell.next("td").length == 0) {
+                    result = false;
+                } else if (cell.next("td").find("input").length > 0) {
+                    if (cell.next("td").find("input").attr("disabled") == "disabled" || cell.next("td").find("input").attr("readonly") == "readonly") {
+                        cell = cell.next("td");
+                    } else {
+                        cell.next("td").find("input").focus()
+                        result = false;
+                    }
+                } else {
+                    cell = cell.next("td");
+                }
+            }
+        }
+    } else if (evt.keyCode == 40) {
+        var result = true;
+        while (result) {
+            if (row.next("tr").length == 0) {
+                result = false;
+            } else if ($(row.next("tr").find("td")[cellindex]).find("input").length > 0) {
+                if ($(row.next("tr").find("td")[cellindex]).find("input").attr("disabled") == "disabled" || $(row.next("tr").find("td")[cellindex]).find("input").attr("readonly") == "readonly") {
+                    row = row.next("tr");
+                } else {
+                    $(row.next("tr").find("td")[cellindex]).find("input").focus()
+                    result = false;
+                }
+            } else {
+                row = row.prev("tr");
+            }
+        }
+        //down
+    }
+
+}
+ ///得到光标在input文本中的位置
+function getTxtCursorPosition(txt) {
+            var cursurPosition = -1;
+            if (txt.selectionStart) {//非IE浏览器
+                cursurPosition = txt.selectionStart;
+            } else {//IE
+                try {
+                    var range = document.selection.createRange();
+                    if (range.text.length == txt.value.length) {
+                        cursurPosition = 0;
+                    } else {
+                        range.moveStart("character", -txt.value.length);
+                        cursurPosition = range.text.length;
+                    }
+                } catch (e) {
+                    cursurPosition = 0;
+                }
+            }
+            return cursurPosition;
+        }
