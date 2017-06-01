@@ -118,7 +118,6 @@ function chengeInputFocus(obj, evt) {
     } else if (evt.keyCode == 38) {
         var result = true;
         while (result) {
-            alert($(row.prev("tr").find("td")[cellindex]).find("input").length);
             if (row.prev("tr").length == 0) {
                 result = false;
             } else if ($(row.prev("tr").find("td")[cellindex]).find("input").length > 0) {
@@ -150,9 +149,9 @@ function chengeInputFocus(obj, evt) {
             }
         }
     } else if (evt.keyCode == 40) {
+		//down
         var result = true;
         while (result) {
-            alert($(row.next("tr").find("td")[cellindex]).find("input").length);
             if (row.next("tr").length == 0) {
                 result = false;
             } else if ($(row.next("tr").find("td")[cellindex]).find("input").length > 0) {
@@ -166,8 +165,5 @@ function chengeInputFocus(obj, evt) {
                 row = row.prev("tr");
             }
         }
-        //down
     }
-    // $(this).focus();
-
 }
